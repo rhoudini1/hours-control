@@ -5,5 +5,6 @@ namespace HoursControl.API.Domain.Interfaces.Repositories;
 
 public interface ISquadRepository
 {
-    Task<Squad> CreateAsync(CreateSquadRequest request, CancellationToken token);
+    Task<Squad> CreateAsync(CreateSquadRequest request, CancellationToken token = default);
+    Task<Squad?> GetByIdAsync(int id, CancellationToken token = default);
 }

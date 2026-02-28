@@ -11,6 +11,7 @@ public static class InfraDependencyInjectionExtension
         public IServiceCollection AddInfrastructure()
         {
             services.AddScoped<ISquadRepository, SquadRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         
             return services;
         }

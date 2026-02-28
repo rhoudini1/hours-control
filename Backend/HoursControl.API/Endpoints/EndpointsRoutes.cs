@@ -10,4 +10,11 @@ public static class EndpointsRoutes
         
         public const string Create = Base;
     }
+
+    public static class Employees
+    {
+        private const string Base = $"{ApiBase}/employee";
+        
+        public const string Create = Base;
+    }
 }

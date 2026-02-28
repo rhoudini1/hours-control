@@ -38,4 +38,6 @@ using (var scope = app.Services.CreateScope())
     await initializer.InitializeDbAsync(); 
 }
 
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
 app.Run();

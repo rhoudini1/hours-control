@@ -19,7 +19,7 @@ public static class CreateSquadEndpoint
         {
             Squad squad = await squadService.CreateAsync(request, token);
             var response = squad.MapToResponse();
-            return TypedResults.Created($"/${EndpointsRoutes.Squads.Create}/{squad.Id}", response);
+            return TypedResults.Created($"/{EndpointsRoutes.Squads.Create}/{squad.Id}", response);
         })
         .WithName(Name)
         .Produces<SquadResponse>(StatusCodes.Status201Created)
