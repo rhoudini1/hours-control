@@ -20,7 +20,6 @@ builder.Services.AddDatabase(config["ConnectionStrings:DefaultConnection"]!);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -36,7 +35,6 @@ app.MapApiEndpoints();
 using (var scope = app.Services.CreateScope())
 {
     var initializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
-    // If your Init method is async, await it:
     await initializer.InitializeDbAsync(); 
 }
 
