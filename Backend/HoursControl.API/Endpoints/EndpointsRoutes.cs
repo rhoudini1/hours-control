@@ -17,4 +17,11 @@ public static class EndpointsRoutes
         
         public const string Create = Base;
     }
+
+    public static class Reports
+    {
+        private const string Base = $"{ApiBase}/report";
+
+        public const string Create = Base;
+    }
 }

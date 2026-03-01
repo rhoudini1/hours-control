@@ -6,22 +6,20 @@ namespace HoursControl.API.Infrastructure;
 
 public static class InfraDependencyInjectionExtension
 {
-    extension(IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        public IServiceCollection AddInfrastructure()
-        {
-            services.AddScoped<ISquadRepository, SquadRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<ISquadRepository, SquadRepository>();
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IReportRepository, ReportRepository>();
         
-            return services;
-        }
+        return services;
+    }
 
-        public IServiceCollection AddDatabase(string connectionString)
-        {
-            services.AddScoped<IDbConnectionFactory>(_ => 
-                new NpgsqlConnectionFactory(connectionString));
-            services.AddScoped<DbInitializer>();
-            return services;
-        }
+    public static IServiceCollection AddDatabase(this IServiceCollection services, string connectionString)
+    {
+        services.AddScoped<IDbConnectionFactory>(_ => 
+            new NpgsqlConnectionFactory(connectionString));
+        services.AddScoped<DbInitializer>();
+        return services;
     }
 }

@@ -9,6 +9,7 @@ public static class ApplicationDependencyInjectionExtension
     {
         services.AddScoped<ISquadService, SquadService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IReportService, ReportService>();
         
         return services;
     }

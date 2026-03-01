@@ -21,4 +21,15 @@ public static class ContractMapping
             Squad: squadResponse
         );
     }
+
+    public static ReportResponse MapToResponse(this Report report)
+    {
+        return new ReportResponse(
+            Id: report.Id,
+            Description: report.Description,
+            SpentHours: report.SpentHours,
+            CreatedAt: report.CreatedAt,
+            EmployeeId: report.EmployeeId
+        );
+    }
 }

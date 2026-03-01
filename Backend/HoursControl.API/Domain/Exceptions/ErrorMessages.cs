@@ -15,5 +15,9 @@ public static class ErrorMessages
 
         public const string EstimatedHours = "O campo \"Horas estimadas de trabalho\" deve conter um valor entre 1 e 12.";
         public const string SquadIdInvalid = "O squad informado não é válido.";
+
+        public const string DescriptionRequired = "A descrição é obrigatória.";
+        public const string SpentHoursInvalid = "As horas gastas devem ser maiores que zero.";
+        public const string EmployeeIdInvalid = "O funcionário informado não é válido.";
     }
 }
