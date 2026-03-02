@@ -5,6 +5,7 @@ public static class EmployeeEndpointExtensions
     public static IEndpointRouteBuilder MapEmployeeEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapCreateEmployee();
+        app.MapListEmployees();
         
         return app;
     }

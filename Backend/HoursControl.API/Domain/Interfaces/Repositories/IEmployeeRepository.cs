@@ -7,4 +7,5 @@ public interface IEmployeeRepository
 {
     Task<Employee> CreateAsync(CreateEmployeeRequest request, CancellationToken token);
     Task<Employee?> GetByIdAsync(int id, CancellationToken token);
+    Task<IEnumerable<Employee>> GetAllAsync(CancellationToken token = default);
 }

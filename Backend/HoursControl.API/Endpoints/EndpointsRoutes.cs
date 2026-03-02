@@ -17,6 +17,7 @@ public static class EndpointsRoutes
         private const string Base = $"{ApiBase}/employee";
         
         public const string Create = Base;
+        public const string List = Base;
     }
 
     public static class Reports

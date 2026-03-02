@@ -26,4 +26,9 @@ public class EmployeeService : IEmployeeService
         await _createEmployeeValidator.ValidateAndThrowAsync(request, cancellationToken: token);
         return await _employeeRepository.CreateAsync(request, token);
     }
+
+    public async Task<IEnumerable<Employee>> ListAsync(CancellationToken token = default)
+    {
+        return await _employeeRepository.GetAllAsync(token);
+    }
 }

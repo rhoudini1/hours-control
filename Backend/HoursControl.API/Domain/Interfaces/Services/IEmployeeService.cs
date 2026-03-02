@@ -6,4 +6,5 @@ namespace HoursControl.API.Domain.Interfaces.Services;
 public interface IEmployeeService
 {
     Task<Employee> CreateAsync(CreateEmployeeRequest request, CancellationToken token = default);
+    Task<IEnumerable<Employee>> ListAsync(CancellationToken token = default);
 }
