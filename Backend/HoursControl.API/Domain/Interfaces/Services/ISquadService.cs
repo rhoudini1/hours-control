@@ -6,4 +6,5 @@ namespace HoursControl.API.Domain.Interfaces.Services;
 public interface ISquadService
 {
     Task<Squad> CreateAsync(CreateSquadRequest request, CancellationToken token = default);
+    Task<IEnumerable<Squad>> ListAsync(CancellationToken token = default);
 }

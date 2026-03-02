@@ -7,4 +7,5 @@ public interface ISquadRepository
 {
     Task<Squad> CreateAsync(CreateSquadRequest request, CancellationToken token = default);
     Task<Squad?> GetByIdAsync(int id, CancellationToken token = default);
+    Task<IEnumerable<Squad>> GetAllAsync(CancellationToken token = default);
 }

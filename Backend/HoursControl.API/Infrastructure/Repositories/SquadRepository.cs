@@ -43,4 +43,17 @@ public class SquadRepository : ISquadRepository
         
         return squad;
     }
+
+    public async Task<IEnumerable<Squad>> GetAllAsync(CancellationToken token = default)
+    {
+        const string sql = "SELECT id, name FROM squads";
+
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
+
+        var command = new CommandDefinition(sql, cancellationToken: token);
+
+        var squads = await connection.QueryAsync<Squad>(command);
+
+        return squads;
+    }
 }

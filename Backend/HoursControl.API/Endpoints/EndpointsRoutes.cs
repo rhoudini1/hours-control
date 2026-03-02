@@ -9,6 +9,7 @@ public static class EndpointsRoutes
         private const string Base = $"{ApiBase}/squad";
         
         public const string Create = Base;
+        public const string List = Base;
     }
 
     public static class Employees

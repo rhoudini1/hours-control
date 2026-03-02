@@ -22,4 +22,9 @@ public class SquadService : ISquadService
         await _createSquadValidator.ValidateAndThrowAsync(request, cancellationToken: token);
         return await _squadRepository.CreateAsync(request, token);
     }
+
+    public async Task<IEnumerable<Squad>> ListAsync(CancellationToken token = default)
+    {
+        return await _squadRepository.GetAllAsync(token);
+    }
 }
