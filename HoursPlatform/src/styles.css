@@ -1,3 +1,86 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+@theme {
+  --color-primary: #4263eb;
+  --color-primary-hover: #2342c0;
+  --color-secondary: #7048e8;
+  --color-secondary-hover: #5028c6;
+  --color-gray1: #f8f9fa;
+  --color-gray2: #dde2e5;
+  --color-gray3: #acb5bd;
+  --color-gray4: #495057;
+  --color-black: #212429;
+  --color-error: #f03d3e;
+  --color-success: #374fc7;
+
+  --radius-btn: 8px;
+
+  --font-sans: 'Roboto', system-ui, sans-serif;
+
+  /* Perfect fourth modular scale based on 16px (1rem) and ratio 1.333 */
+  --text-base: 1rem;
+  --text-base--line-height: 1.5;
+  --text-lg: 1.333rem;
+  --text-lg--line-height: 1.6;
+  --text-xl: 1.777rem;
+  --text-xl--line-height: 1.7;
+  --text-2xl: 2.368rem;
+  --text-2xl--line-height: 1.8;
+  --text-3xl: 3.158rem;
+  --text-3xl--line-height: 1.9;
+  --text-4xl: 4.211rem;
+  --text-4xl--line-height: 2;
+}
+
+@layer components {
+  /* Button component definitions based on the old JS plugin */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-btn);
+    font-weight: 400;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out;
+  }
+
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background-color: var(--color-secondary);
+    color: #fff;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-secondary-hover);
+  }
+  .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-alternate {
+    border: 1px solid var(--color-gray3);
+    background-color: #fff;
+    color: var(--color-gray4);
+  }
+  .btn-alternate:hover:not(:disabled) {
+    border-color: var(--color-black);
+  }
+  .btn-alternate:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
