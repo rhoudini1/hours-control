@@ -69,7 +69,8 @@ public class ReportRepository : IReportRepository
                       r.description,
                       r.spent_hours,
                       r.created_at,
-                      r.employee_id
+                      r.employee_id,
+                      e.name AS EmployeeName
                   FROM reports r
                   INNER JOIN employees e ON r.employee_id = e.id
                   WHERE e.squad_id = @SquadId

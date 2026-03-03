@@ -11,20 +11,17 @@ public class SquadService : ISquadService
 {
     private readonly ISquadRepository _squadRepository;
     private readonly IReportRepository _reportRepository;
-    private readonly IEmployeeRepository _employeeRepository;
     private readonly IValidator<CreateSquadRequest> _createSquadValidator;
     private readonly IValidator<GetSquadDetailsRequest> _getSquadDetailsValidator;
 
     public SquadService(
         ISquadRepository squadRepository,
         IReportRepository reportRepository,
-        IEmployeeRepository employeeRepository,
         IValidator<CreateSquadRequest> createSquadValidator,
         IValidator<GetSquadDetailsRequest> getSquadDetailsValidator)
     {
         _squadRepository = squadRepository;
         _reportRepository = reportRepository;
-        _employeeRepository = employeeRepository;
         _createSquadValidator = createSquadValidator;
         _getSquadDetailsValidator = getSquadDetailsValidator;
     }
@@ -47,16 +44,12 @@ public class SquadService : ISquadService
         await _getSquadDetailsValidator.ValidateAndThrowAsync(request, cancellationToken: token);
 
         var reports = await _reportRepository.GetBySquadIdAsync(request.Id, request.StartDate, request.EndDate, token);
-        var employees = await _employeeRepository.GetBySquadIdAsync(request.Id, token);
 
         var reportsList = reports.ToList();
-        var employeeDictionary = employees.ToDictionary(e => e.Id, e => e.Name);
 
         var squadReports = reportsList
             .Select(r => new SquadReportResponse(
-                Name: employeeDictionary.TryGetValue(r.EmployeeId, out var employeeName) 
-                    ? employeeName 
-                    : "Unknown",
+                Name: r.EmployeeName ?? "Unknown",
                 Description: r.Description,
                 Hours: r.SpentHours,
                 CreatedAt: r.CreatedAt
