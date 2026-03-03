@@ -6,6 +6,7 @@ public static class SquadEndpointExtensions
     {
         app.MapCreateSquad();
         app.MapListSquads();
+        app.MapGetSquadDetails();
         
         return app;
     }

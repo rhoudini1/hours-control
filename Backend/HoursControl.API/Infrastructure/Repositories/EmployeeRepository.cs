@@ -75,4 +75,24 @@ public class EmployeeRepository : IEmployeeRepository
         
         return employees;
     }
+
+    public async Task<IEnumerable<Employee>> GetBySquadIdAsync(int squadId, CancellationToken token = default)
+    {
+        const string sql = """
+                           SELECT
+                               e.*,
+                               s.name AS SquadName
+                           FROM Employees e
+                           INNER JOIN Squads s ON e.squad_id = s.id
+                           WHERE e.squad_id = @SquadId
+                           """;
+
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
+        
+        var command = new CommandDefinition(sql, new { SquadId = squadId }, cancellationToken: token);
+
+        var employees = await connection.QueryAsync<Employee>(command);
+        
+        return employees;
+    }
 }

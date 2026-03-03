@@ -10,6 +10,7 @@ public static class EndpointsRoutes
         
         public const string Create = Base;
         public const string List = Base;
+        public const string Details = $"{Base}/{{id}}";
     }
 
     public static class Employees
