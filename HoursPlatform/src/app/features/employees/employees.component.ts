@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, viewChild } from '@angular/core';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { TableComponent } from '../../shared/components/table/table.component';
@@ -6,11 +6,18 @@ import { TableColumn } from '../../shared/components/table/table.types';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { ApiService } from '../../core/services/api.service';
 import { Employee } from '../../models/employee.model';
+import { CreateEmployeeModalComponent } from './create-employee-modal/create-employee-modal.component';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CardComponent, ButtonComponent, TableComponent, LoadingSpinnerComponent],
+  imports: [
+    CardComponent,
+    ButtonComponent,
+    TableComponent,
+    LoadingSpinnerComponent,
+    CreateEmployeeModalComponent,
+  ],
   template: `
     <div class="mt-8 flex flex-col justify-start w-full">
       <!-- Loading state -->
@@ -47,7 +54,7 @@ import { Employee } from '../../models/employee.model';
               Nenhum usuário cadastrado. Crie um usuário para começar.
             </p>
 
-            <app-button variant="primary">Criar usuário</app-button>
+            <app-button variant="primary" (click)="openCreateModal()">Criar usuário</app-button>
           </div>
         </app-card>
       }
@@ -69,16 +76,22 @@ import { Employee } from '../../models/employee.model';
             </app-table>
 
             <div class="mt-8">
-              <app-button variant="primary">Criar usuário</app-button>
+              <app-button variant="primary" (click)="openCreateModal()">Criar usuário</app-button>
             </div>
           </div>
         </app-card>
       }
     </div>
+
+    <!-- Create employee modal -->
+    <app-create-employee-modal #createModal (employeeCreated)="loadEmployees()" />
   `,
 })
 export class EmployeesComponent implements OnInit {
   private readonly api = inject(ApiService);
+
+  /** Reference to the create employee modal */
+  private readonly createModal = viewChild.required<CreateEmployeeModalComponent>('createModal');
 
   /** The list of employees returned by the API */
   employees = signal<Employee[]>([]);
@@ -97,6 +110,11 @@ export class EmployeesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadEmployees();
+  }
+
+  /** Opens the create employee modal */
+  openCreateModal(): void {
+    this.createModal().open();
   }
 
   /** Fetches employees from the API. Can also be called to retry after an error. */
