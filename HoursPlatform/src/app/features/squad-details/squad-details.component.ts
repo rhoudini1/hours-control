@@ -1,4 +1,4 @@
-import { Component, signal, inject, computed, effect } from '@angular/core';
+import { Component, signal, inject, computed, effect, untracked } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
@@ -137,10 +137,13 @@ export class SquadDetailsComponent {
       this.loadDetails();
     });
 
-    // Reload data whenever a new report is created from the global modal
+    // Reload data whenever a new report is created from the global modal.
+    // `untracked` prevents the signal reads inside `loadDetails` (startDate, endDate)
+    // from being registered as dependencies of this effect, which would otherwise
+    // cause the request to fire automatically whenever the user picks a date.
     effect(() => {
       if (this.reportModal.reportCreated() > 0) {
-        this.loadDetails();
+        untracked(() => this.loadDetails());
       }
     });
   }
