@@ -19,7 +19,9 @@ public static class ErrorMessages
         public const string InvalidEndDate = "A data de término deve ser maior ou igual à data de início.";
 
         public const string DescriptionRequired = "A descrição é obrigatória.";
+        public const string DescriptionTooLong = "A descrição deve ter 500 caracteres no máximo.";
         public const string SpentHoursInvalid = "As horas gastas devem ser maiores que zero.";
+        public const string TooMuchSpentHours = "Ninguém trabalha mais de 20 horas por dia.";
         public const string EmployeeIdInvalid = "O funcionário informado não é válido.";
     }
 }

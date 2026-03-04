@@ -14,10 +14,12 @@ public class CreateReportValidator : AbstractValidator<CreateReportRequest>
         _employeeRepository = employeeRepository;
 
         RuleFor(x => x.Description)
-            .NotEmpty().WithMessage(ErrorMessages.Validation.DescriptionRequired);
+            .NotEmpty().WithMessage(ErrorMessages.Validation.DescriptionRequired)
+            .MaximumLength(500).WithMessage(ErrorMessages.Validation.DescriptionTooLong);
 
         RuleFor(x => x.SpentHours)
-            .GreaterThan(0).WithMessage(ErrorMessages.Validation.SpentHoursInvalid);
+            .GreaterThan(0).WithMessage(ErrorMessages.Validation.SpentHoursInvalid)
+            .LessThan(21).WithMessage(ErrorMessages.Validation.TooMuchSpentHours);
 
         RuleFor(x => x.EmployeeId)
             .GreaterThan(0).WithMessage(ErrorMessages.Validation.EmployeeIdInvalid)
