@@ -12,7 +12,7 @@ import { TableColumn } from './table.types';
         <thead class="bg-primary text-white">
           <tr>
             @for (col of columns(); track col.key) {
-              <th class="p-4 font-medium text-sm">{{ col.label }}</th>
+              <th class="p-3 md:p-4 font-medium text-sm whitespace-nowrap">{{ col.label }}</th>
             }
           </tr>
         </thead>
@@ -20,7 +20,7 @@ import { TableColumn } from './table.types';
           @for (row of data(); track $index) {
             <tr class="hover:bg-gray1 transition-colors border-b border-gray2 last:border-b-0">
               @for (col of columns(); track col.key) {
-                <td class="p-4 text-sm text-gray4">
+                <td class="p-3 md:p-4 text-sm text-gray4 whitespace-nowrap">
                   @if (cellTemplate()) {
                     <ng-container
                       *ngTemplateOutlet="cellTemplate()!; context: { row: row, col: col }"
@@ -33,7 +33,10 @@ import { TableColumn } from './table.types';
             </tr>
           } @empty {
             <tr>
-              <td [attr.colspan]="columns().length" class="p-4 text-center text-sm text-gray4">
+              <td
+                [attr.colspan]="columns().length"
+                class="p-3 md:p-4 text-center text-sm text-gray4"
+              >
                 Nenhum dado encontrado
               </td>
             </tr>
