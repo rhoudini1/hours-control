@@ -59,21 +59,18 @@ public class SquadService : ISquadService
         var totalHours = reportsList.Sum(r => r.SpentHours);
         
         double averageHours = 0;
-        if (reportsList.Count > 0)
+        if (reportsList.Any())
         {
-            if (request.StartDate.HasValue && request.EndDate.HasValue)
-            {
-                var dayCount = (request.EndDate.Value.ToDateTime(TimeOnly.MinValue) - request.StartDate.Value.ToDateTime(TimeOnly.MinValue)).Days + 1;
-                averageHours = (double)totalHours / dayCount;
-            }
-            else
-            {
-                var distinctDays = reportsList
-                    .Select(r => r.CreatedAt.Date)
-                    .Distinct()
-                    .Count();
-                averageHours = distinctDays > 0 ? (double)totalHours / distinctDays : 0;
-            }
+            int dayCount = request.StartDate.HasValue && request.EndDate.HasValue
+                            ? (request.EndDate.Value.ToDateTime(TimeOnly.MinValue) -
+                               request.StartDate.Value.ToDateTime(TimeOnly.MinValue)).Days + 1
+                            : reportsList
+                                .Select(r => r.CreatedAt.Date)
+                                .Distinct()
+                                .Count();
+
+            if (dayCount > 0)
+                averageHours = Math.Round((double)totalHours / dayCount, 1);
         }
 
         return new SquadDetailsResponse(squadReports, totalHours, averageHours);
