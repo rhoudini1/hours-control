@@ -35,6 +35,10 @@ O docker compose fará o build dos containeres e cada projeto ficará disponíve
 - Backend: `http://localhost:7282`
 - PgAdmin: `http://localhost:5050`
 
+> ‼️**IMPORTANTE:** para usar o PGAdmin, pode ser necessário fazer o login com usuário `admin@admin.com` e senha `admin`. Para se conectar ao banco, clique em **Add server** e preencha os seguintes dados: `Host => db; Username => pdadmin; Password: SecureP4ss!` Essas foram as credenciais criadas no `docker-compose`.
+> É legal ter o PgAdmin para poder editar registros de Report direto no banco para mudar a data de criação e testar o filtro de data do endpoint `GET /squad/{id}` de detalhes de uma squad.
+
+
 ### 👨‍💻 Como desenvolvedor
 
 Para rodar o ambiente de desenvolvimento, instale:
@@ -68,13 +72,18 @@ Para acessar as rotas disponíveis, com o projeto rodando, acesse o projeto back
 
 - Duas middlewares criadas: uma para erros de validação, retorna Bad Request 400; outra para capturar exceções desconhecidas, retorna Internal Server Error 500.
 
+### Segurança
+
+- Estou ciente de que colocar a Connection String do banco de dados no `appsettings.json` não é boa prática, mas foi o mais conveniente para uma solução local. Em ambiente de produção, é necessário fazer uso de variável de ambiente ou user secrets, provavelmente definidos num fluxo de CI/CD.
+
 ## ⚠️ Problemas conhecidos
 
 - (Back) A data de criação de um registro de horas trabalhadas (Report) é salva no banco no formato UTC. Logo, ao obter os reports para um determinado período, há um bug caso o registro tenha sido feito das 21h às 0h, pois o horário de Brasília é GMT-3, logo há três horas de diferença com relação ao horário UTC. Devido ao tempo, optei por deixar passar, mas o correto é criar um helper para converter as datas para o horário do Brasil, ou criar um helper que identifique e converta a timezone automaticamente.
-- (Front) Após digitar uma data na busca, o componente está atualizando a página automaticamente, algo que não deveria acontecer.
+- (Back) O caso de uso de criação de Report não valida se já teve cadastro naquele dia para o usuário, algo que é crucial validar.
 
 ## Possíveis melhorias futuras
 
 - [ ] (Front) Na modal de criação do Employee, tornar o campo de Squad dinâmico, seja listando todas as squads ou buscando pelo nome.
 - [ ] (Front) Na modal de criação de Report, tornar o campo de Funcionário dinâmico com busca, em vez de digitar manualmente o ID.
 - [ ] (Back) Adicionar cache para endpoints de leitura e cache evict para endpoints de escrita.
+
