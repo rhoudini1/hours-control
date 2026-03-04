@@ -1,18 +1,38 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { TableColumn } from '../../shared/components/table/table.types';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { ApiService } from '../../core/services/api.service';
 import { Squad } from '../../models/squad.model';
 
 @Component({
   selector: 'app-squads',
   standalone: true,
-  imports: [CardComponent, ButtonComponent, TableComponent],
+  imports: [CardComponent, ButtonComponent, TableComponent, LoadingSpinnerComponent],
   template: `
     <div class="mt-8 flex flex-col justify-start w-full">
-      @if (squads().length === 0) {
+      <!-- Loading state -->
+      @if (isLoading()) {
+        <app-card class="w-full max-w-[500px]">
+          <app-loading-spinner containerPadding="py-16" />
+        </app-card>
+      }
+
+      <!-- Error state -->
+      @else if (errorMessage()) {
+        <app-card class="w-full max-w-[500px]">
+          <div class="flex flex-col items-center justify-center py-16 px-8 text-center">
+            <p class="text-red-500 font-medium mb-6">{{ errorMessage() }}</p>
+            <app-button variant="primary" (click)="loadSquads()">Tentar novamente</app-button>
+          </div>
+        </app-card>
+      }
+
+      <!-- Empty state -->
+      @else if (squads().length === 0) {
         <app-card class="w-full max-w-[500px]">
           <div
             class="flex flex-col items-center justify-center py-16 px-8 text-center bg-white rounded-card"
@@ -31,7 +51,10 @@ import { Squad } from '../../models/squad.model';
             <app-button variant="primary">Criar squad</app-button>
           </div>
         </app-card>
-      } @else {
+      }
+
+      <!-- Data table -->
+      @else {
         <h1 class="text-[32px] font-semibold text-black mb-8 tracking-tight">Lista de Squads</h1>
 
         <app-card class="w-full max-w-[850px]">
@@ -61,21 +84,45 @@ import { Squad } from '../../models/squad.model';
     </div>
   `,
 })
-export class SquadsComponent {
-  private router = inject(Router);
+export class SquadsComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly api = inject(ApiService);
 
-  squads = signal<Squad[]>([
-    { id: 1, name: 'Front-end' },
-    { id: 2, name: 'Back-end' },
-    { id: 3, name: 'Qualidade' },
-    { id: 4, name: 'Mobile' },
-  ]);
+  /** The list of squads returned by the API */
+  squads = signal<Squad[]>([]);
+
+  /** True while the GET /squad request is in-flight */
+  isLoading = signal(true);
+
+  /** Holds an error message if the request fails */
+  errorMessage = signal<string | null>(null);
 
   tableColumns: TableColumn[] = [
     { label: 'ID', key: 'id' },
     { label: 'Nome', key: 'name' },
     { label: '', key: 'action' },
   ];
+
+  ngOnInit(): void {
+    this.loadSquads();
+  }
+
+  /** Fetches squads from the API. Can also be called to retry after an error. */
+  loadSquads(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    this.api.get<Squad[]>('squad').subscribe({
+      next: (data) => {
+        this.squads.set(data);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.errorMessage.set('Não foi possível carregar as squads. Verifique sua conexão.');
+        this.isLoading.set(false);
+      },
+    });
+  }
 
   goToSquad(id: number) {
     this.router.navigate(['/squads', id]);

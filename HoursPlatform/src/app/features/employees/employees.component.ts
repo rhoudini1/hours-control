@@ -1,17 +1,37 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { TableColumn } from '../../shared/components/table/table.types';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { ApiService } from '../../core/services/api.service';
 import { Employee } from '../../models/employee.model';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CardComponent, ButtonComponent, TableComponent],
+  imports: [CardComponent, ButtonComponent, TableComponent, LoadingSpinnerComponent],
   template: `
     <div class="mt-8 flex flex-col justify-start w-full">
-      @if (employees().length === 0) {
+      <!-- Loading state -->
+      @if (isLoading()) {
+        <app-card class="w-full max-w-[500px]">
+          <app-loading-spinner containerPadding="py-16" />
+        </app-card>
+      }
+
+      <!-- Error state -->
+      @else if (errorMessage()) {
+        <app-card class="w-full max-w-[500px]">
+          <div class="flex flex-col items-center justify-center py-16 px-8 text-center">
+            <p class="text-red-500 font-medium mb-6">{{ errorMessage() }}</p>
+            <app-button variant="primary" (click)="loadEmployees()">Tentar novamente</app-button>
+          </div>
+        </app-card>
+      }
+
+      <!-- Empty state -->
+      @else if (employees().length === 0) {
         <app-card class="w-full max-w-[500px]">
           <div
             class="flex flex-col items-center justify-center py-16 px-8 text-center bg-white rounded-card"
@@ -30,7 +50,10 @@ import { Employee } from '../../models/employee.model';
             <app-button variant="primary">Criar usuário</app-button>
           </div>
         </app-card>
-      } @else {
+      }
+
+      <!-- Data table -->
+      @else {
         <h1 class="text-[32px] font-semibold text-black mb-8 tracking-tight">Lista de Usuários</h1>
 
         <app-card class="w-full max-w-[850px]">
@@ -40,7 +63,7 @@ import { Employee } from '../../models/employee.model';
             <app-table [columns]="tableColumns" [data]="employees()" class="w-full">
               <ng-template let-row="row" let-col="col">
                 <span class="text-black font-medium pl-2">{{
-                  col.key === 'squad.id' ? row.squad.id : row[col.key]
+                  col.key === 'squad.name' ? row.squad.name : row[col.key]
                 }}</span>
               </ng-template>
             </app-table>
@@ -54,17 +77,42 @@ import { Employee } from '../../models/employee.model';
     </div>
   `,
 })
-export class EmployeesComponent {
-  employees = signal<Employee[]>([
-    { id: 1, name: 'João', estimatedHours: 8, squad: { id: 1, name: 'Squad 1' } },
-    { id: 2, name: 'Pedro', estimatedHours: 9, squad: { id: 1, name: 'Squad 1' } },
-    { id: 3, name: 'Fábio', estimatedHours: 6, squad: { id: 3, name: 'Squad 3' } },
-    { id: 4, name: 'Lucas', estimatedHours: 8, squad: { id: 2, name: 'Squad 2' } },
-  ]);
+export class EmployeesComponent implements OnInit {
+  private readonly api = inject(ApiService);
+
+  /** The list of employees returned by the API */
+  employees = signal<Employee[]>([]);
+
+  /** True while the GET /employee request is in-flight */
+  isLoading = signal(true);
+
+  /** Holds an error message if the request fails */
+  errorMessage = signal<string | null>(null);
 
   tableColumns: TableColumn[] = [
     { label: 'Nome', key: 'name' },
     { label: 'Horas', key: 'estimatedHours' },
-    { label: 'Squad ID', key: 'squad.id' },
+    { label: 'Squad', key: 'squad.name' },
   ];
+
+  ngOnInit(): void {
+    this.loadEmployees();
+  }
+
+  /** Fetches employees from the API. Can also be called to retry after an error. */
+  loadEmployees(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    this.api.get<Employee[]>('employee').subscribe({
+      next: (data) => {
+        this.employees.set(data);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.errorMessage.set('Não foi possível carregar os usuários. Verifique sua conexão.');
+        this.isLoading.set(false);
+      },
+    });
+  }
 }
