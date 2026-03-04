@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -7,11 +7,18 @@ import { TableColumn } from '../../shared/components/table/table.types';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { ApiService } from '../../core/services/api.service';
 import { Squad } from '../../models/squad.model';
+import { CreateSquadModalComponent } from './create-squad-modal/create-squad-modal.component';
 
 @Component({
   selector: 'app-squads',
   standalone: true,
-  imports: [CardComponent, ButtonComponent, TableComponent, LoadingSpinnerComponent],
+  imports: [
+    CardComponent,
+    ButtonComponent,
+    TableComponent,
+    LoadingSpinnerComponent,
+    CreateSquadModalComponent,
+  ],
   template: `
     <div class="mt-8 flex flex-col justify-start w-full">
       <!-- Loading state -->
@@ -48,7 +55,7 @@ import { Squad } from '../../models/squad.model';
               Nenhuma squad cadastrada. Crie uma squad para começar.
             </p>
 
-            <app-button variant="primary">Criar squad</app-button>
+            <app-button variant="primary" (click)="openCreateModal()">Criar squad</app-button>
           </div>
         </app-card>
       }
@@ -76,17 +83,23 @@ import { Squad } from '../../models/squad.model';
             </app-table>
 
             <div class="mt-8">
-              <app-button variant="primary">Criar squad</app-button>
+              <app-button variant="primary" (click)="openCreateModal()">Criar squad</app-button>
             </div>
           </div>
         </app-card>
       }
     </div>
+
+    <!-- Create Squad Modal -->
+    <app-create-squad-modal #createModal (squadCreated)="loadSquads()" />
   `,
 })
 export class SquadsComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly api = inject(ApiService);
+
+  /** Reference to the create squad modal */
+  private readonly createModal = viewChild.required<CreateSquadModalComponent>('createModal');
 
   /** The list of squads returned by the API */
   squads = signal<Squad[]>([]);
@@ -105,6 +118,11 @@ export class SquadsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSquads();
+  }
+
+  /** Opens the "Criar squad" modal */
+  openCreateModal() {
+    this.createModal().open();
   }
 
   /** Fetches squads from the API. Can also be called to retry after an error. */
