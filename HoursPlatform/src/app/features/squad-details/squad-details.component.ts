@@ -1,4 +1,4 @@
-import { Component, signal, inject, computed } from '@angular/core';
+import { Component, signal, inject, computed, effect } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
@@ -8,6 +8,7 @@ import { TableComponent } from '../../shared/components/table/table.component';
 import { TableColumn } from '../../shared/components/table/table.types';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { ApiService } from '../../core/services/api.service';
+import { ReportModalService } from '../../core/services/report-modal.service';
 import { SquadDetailsResponse } from '../../models/squad-details.model';
 
 @Component({
@@ -98,6 +99,7 @@ import { SquadDetailsResponse } from '../../models/squad-details.model';
 export class SquadDetailsComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly api = inject(ApiService);
+  private readonly reportModal = inject(ReportModalService);
 
   startDate = signal<string | null>(null);
   endDate = signal<string | null>(null);
@@ -133,6 +135,13 @@ export class SquadDetailsComponent {
     this.route.params.subscribe((params) => {
       this.squadId = Number(params['id']);
       this.loadDetails();
+    });
+
+    // Reload data whenever a new report is created from the global modal
+    effect(() => {
+      if (this.reportModal.reportCreated() > 0) {
+        this.loadDetails();
+      }
     });
   }
 

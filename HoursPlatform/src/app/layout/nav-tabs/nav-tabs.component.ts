@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { ReportModalService } from '../../core/services/report-modal.service';
 
 @Component({
   selector: 'app-nav-tabs',
@@ -11,7 +12,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
       <div class="max-w-[1240px] w-full mx-auto px-6">
         <div class="flex justify-between items-end pt-12 mb-10">
           <h1 class="text-[40px] font-semibold text-black leading-none tracking-tight">PD Hours</h1>
-          <app-button variant="primary">Lançar horas</app-button>
+          <app-button variant="primary" (click)="reportModal.open()">Lançar horas</app-button>
         </div>
 
         <div class="flex gap-[32px]">
@@ -40,4 +41,6 @@ import { ButtonComponent } from '../../shared/components/button/button.component
     </div>
   `,
 })
-export class NavTabsComponent {}
+export class NavTabsComponent {
+  protected readonly reportModal = inject(ReportModalService);
+}
