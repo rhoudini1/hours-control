@@ -4,7 +4,6 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class ReportModalService {
-  /** Controls whether the "Criar lançamento" modal is visible */
   isOpen = signal(false);
 
   /**
@@ -21,7 +20,6 @@ export class ReportModalService {
     this.isOpen.set(false);
   }
 
-  /** Call after a successful report creation to notify interested pages */
   notifyCreated(): void {
     this.reportCreated.update((n) => n + 1);
   }

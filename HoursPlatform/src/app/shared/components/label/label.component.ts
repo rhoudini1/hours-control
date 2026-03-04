@@ -89,7 +89,6 @@ export class LabelComponent {
   }
 
   containerClasses = computed(() => {
-    // Determine the border color based on focus and state
     if (this.state() === 'error') {
       return this.isFocused()
         ? 'border-[var(--color-error)] ring-1 ring-[var(--color-error)]'
@@ -104,8 +103,6 @@ export class LabelComponent {
   });
 
   inputClasses = computed(() => {
-    // normal: gray 2 placeholder (via tailwind pseudo class)
-    // state mapping: text color gets gray 4 when success or error
     let classes = 'placeholder:text-[var(--color-gray2)] ';
 
     if (this.state() === 'success' || this.state() === 'error' || this.value()) {
@@ -131,7 +128,7 @@ export class LabelComponent {
 
   iconClasses = computed(() => {
     if (this.state() === 'success') {
-      return 'text-[var(--color-primary)]'; // blue color based on design mock
+      return 'text-[var(--color-primary)]';
     }
     if (this.state() === 'error') {
       return 'text-[var(--color-error)]';

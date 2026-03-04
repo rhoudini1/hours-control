@@ -90,16 +90,12 @@ import { CreateEmployeeModalComponent } from './create-employee-modal/create-emp
 export class EmployeesComponent implements OnInit {
   private readonly api = inject(ApiService);
 
-  /** Reference to the create employee modal */
   private readonly createModal = viewChild.required<CreateEmployeeModalComponent>('createModal');
 
-  /** The list of employees returned by the API */
   employees = signal<Employee[]>([]);
 
-  /** True while the GET /employee request is in-flight */
   isLoading = signal(true);
 
-  /** Holds an error message if the request fails */
   errorMessage = signal<string | null>(null);
 
   tableColumns: TableColumn[] = [
@@ -112,12 +108,10 @@ export class EmployeesComponent implements OnInit {
     this.loadEmployees();
   }
 
-  /** Opens the create employee modal */
   openCreateModal(): void {
     this.createModal().open();
   }
 
-  /** Fetches employees from the API. Can also be called to retry after an error. */
   loadEmployees(): void {
     this.isLoading.set(true);
     this.errorMessage.set(null);

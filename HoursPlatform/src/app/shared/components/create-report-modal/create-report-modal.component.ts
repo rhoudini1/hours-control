@@ -105,20 +105,16 @@ export class CreateReportModalComponent {
   private readonly api = inject(ApiService);
   private readonly toast = inject(ToastService);
 
-  // Form field signals
   employeeIdStr = signal('');
   spentHoursStr = signal('');
   description = signal('');
 
-  // Focus state for the textarea
   descriptionFocused = signal(false);
 
-  // Validation error signals
   employeeIdError = signal<string | null>(null);
   spentHoursError = signal<string | null>(null);
   descriptionError = signal<string | null>(null);
 
-  /** Errors with propertyName 'employeeId' go here (shown as an alert banner per spec) */
   generalError = signal<string | null>(null);
 
   isSubmitting = signal(false);
@@ -144,7 +140,6 @@ export class CreateReportModalComponent {
   }
 
   submit(): void {
-    // Clear previous errors
     this.employeeIdError.set(null);
     this.spentHoursError.set(null);
     this.descriptionError.set(null);
@@ -174,7 +169,7 @@ export class CreateReportModalComponent {
             const prop = error.propertyName?.toLowerCase();
 
             if (prop === 'employeeid') {
-              // Per spec: employeeId errors go to the error alert banner
+              // Just to show the error alert for employeeId error
               this.generalError.set(error.message);
             } else if (prop === 'spenthours') {
               this.spentHoursError.set(error.message);

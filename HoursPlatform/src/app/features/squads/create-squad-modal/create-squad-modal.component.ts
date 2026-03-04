@@ -55,10 +55,8 @@ interface ApiError {
 export class CreateSquadModalComponent {
   private readonly api = inject(ApiService);
 
-  /** Controls modal visibility from the parent */
   isOpen = signal(false);
 
-  /** Emitted when the squad is created successfully */
   squadCreated = output<Squad>();
 
   name = signal('');
@@ -76,7 +74,6 @@ export class CreateSquadModalComponent {
   }
 
   submit() {
-    // Clear previous errors
     this.nameError.set(null);
     this.generalError.set(null);
 
@@ -99,7 +96,6 @@ export class CreateSquadModalComponent {
           let hasFieldError = false;
 
           for (const error of errors) {
-            // The API uses camelCase 'name' as propertyName for the squad name field
             if (error.propertyName?.toLowerCase() === 'name') {
               this.nameError.set(error.message);
               hasFieldError = true;
@@ -108,7 +104,6 @@ export class CreateSquadModalComponent {
             }
           }
 
-          // If there were errors with no propertyName match, show first as general
           if (!hasFieldError && errors.length > 0 && !this.generalError()) {
             this.generalError.set(errors[0].message);
           }

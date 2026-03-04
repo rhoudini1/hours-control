@@ -104,18 +104,12 @@ export class SquadDetailsComponent {
   startDate = signal<string | null>(null);
   endDate = signal<string | null>(null);
 
-  /** True while the API request is in-flight */
   isLoading = signal(true);
 
-  /** Holds an error message if the request fails */
   errorMessage = signal<string | null>(null);
 
   details = signal<SquadDetailsResponse>({ reports: [], totalHours: 0, averageHours: 0 });
 
-  /**
-   * Reports with createdAt formatted as a locale date string for display.
-   * The raw ISO string from the API is kept in `details()` for potential re-use.
-   */
   formattedReports = computed(() =>
     this.details().reports.map((r) => ({
       ...r,
@@ -131,7 +125,6 @@ export class SquadDetailsComponent {
   ];
 
   constructor() {
-    // Read the squad id from the route and trigger the initial load
     this.route.params.subscribe((params) => {
       this.squadId = Number(params['id']);
       this.loadDetails();
@@ -148,15 +141,13 @@ export class SquadDetailsComponent {
     });
   }
 
-  /** The squad id resolved from the route — set before any API call */
   private squadId!: number;
 
-  /** Fetches squad details. Called on init and when the user clicks "Filtrar por data". */
   loadDetails(): void {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    // Build optional query params — only include non-null date values
+    // Optional query params — only include non-null date values
     let params = new HttpParams();
     const start = this.startDate();
     const end = this.endDate();

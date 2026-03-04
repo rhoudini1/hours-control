@@ -98,16 +98,12 @@ export class SquadsComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly api = inject(ApiService);
 
-  /** Reference to the create squad modal */
   private readonly createModal = viewChild.required<CreateSquadModalComponent>('createModal');
 
-  /** The list of squads returned by the API */
   squads = signal<Squad[]>([]);
 
-  /** True while the GET /squad request is in-flight */
   isLoading = signal(true);
 
-  /** Holds an error message if the request fails */
   errorMessage = signal<string | null>(null);
 
   tableColumns: TableColumn[] = [
@@ -120,12 +116,10 @@ export class SquadsComponent implements OnInit {
     this.loadSquads();
   }
 
-  /** Opens the "Criar squad" modal */
   openCreateModal() {
     this.createModal().open();
   }
 
-  /** Fetches squads from the API. Can also be called to retry after an error. */
   loadSquads(): void {
     this.isLoading.set(true);
     this.errorMessage.set(null);

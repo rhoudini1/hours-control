@@ -17,7 +17,7 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
         <ng-content></ng-content>
       </main>
 
-      <!-- Global modal and toast — mounted once, visible from any page -->
+      <!-- Global modal and toast, mounted once, visible from any page -->
       <app-create-report-modal />
       <app-toast />
     </div>

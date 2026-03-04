@@ -1,13 +1,5 @@
 import { Component, input } from '@angular/core';
 
-/**
- * Reusable loading spinner component.
- * Displays a centered animated ring while data is being fetched.
- *
- * Usage:
- *   <app-loading-spinner />
- *   <app-loading-spinner size="sm" />
- */
 @Component({
   selector: 'app-loading-spinner',
   standalone: true,
@@ -27,10 +19,8 @@ import { Component, input } from '@angular/core';
   `,
 })
 export class LoadingSpinnerComponent {
-  /** Controls the size of the spinner: 'sm' | 'md' | 'lg' */
   size = input<'sm' | 'md' | 'lg'>('md');
 
-  /** Extra Tailwind classes for the outer container */
   containerPadding = input<string>('py-12');
 
   protected spinnerClass() {

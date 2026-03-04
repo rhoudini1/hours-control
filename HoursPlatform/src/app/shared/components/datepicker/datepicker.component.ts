@@ -217,7 +217,6 @@ export class DatepickerComponent implements OnInit {
   }
 
   // --- Inline style computed values ---
-
   borderColor = computed(() => {
     if (this.isInvalidDate()) return COLOR_ERROR;
     if (this.hasValidDate()) return COLOR_GRAY4;

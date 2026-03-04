@@ -4,7 +4,6 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class ToastService {
-  /** Currently displayed message, or null when no toast is visible */
   message = signal<string | null>(null);
 
   private timeoutId: ReturnType<typeof setTimeout> | null = null;

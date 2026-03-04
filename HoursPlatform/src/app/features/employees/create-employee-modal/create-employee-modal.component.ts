@@ -83,18 +83,14 @@ interface ApiError {
 export class CreateEmployeeModalComponent {
   private readonly api = inject(ApiService);
 
-  /** Controls modal visibility from the parent */
   isOpen = signal(false);
 
-  /** Emitted when an employee is created successfully */
   employeeCreated = output<Employee>();
 
-  // Form field signals (strings for two-way binding via LabelComponent)
   name = signal('');
   estimatedHoursStr = signal('');
   squadIdStr = signal('');
 
-  // Validation error signals
   nameError = signal<string | null>(null);
   estimatedHoursError = signal<string | null>(null);
   squadIdError = signal<string | null>(null);
@@ -112,7 +108,6 @@ export class CreateEmployeeModalComponent {
   }
 
   submit() {
-    // Clear previous errors
     this.nameError.set(null);
     this.estimatedHoursError.set(null);
     this.squadIdError.set(null);
@@ -145,7 +140,6 @@ export class CreateEmployeeModalComponent {
             } else if (prop === 'squadid') {
               this.squadIdError.set(error.message);
             } else {
-              // No matching field — show as general error
               this.generalError.set(error.message);
             }
           }
