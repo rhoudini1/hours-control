@@ -18,12 +18,24 @@ builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddDatabase(config["ConnectionStrings:DefaultConnection"]!);
 
+var allowedOrigins = config.GetSection("CorsSettings:AllowedOrigins").Get<string[]>() ?? [];
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("LocalDevPolicy", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+    app.UseCors("LocalDevPolicy");
 }
 
 app.UseHttpsRedirection();
