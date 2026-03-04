@@ -14,6 +14,8 @@
   --color-success: #374fc7;
 
   --radius-btn: 8px;
+  --radius-card: 12px;
+  --shadow-card: 0px 2px 4px rgba(33, 36, 41, 0.05);
 
   --font-sans: 'Roboto', system-ui, sans-serif;
 
